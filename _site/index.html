@@ -3,116 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantPulse — Market & ETF Terminal</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>QuantPulse — Market &amp; ETF Terminal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace']
-          }
-        }
-      }
-    };
-  </script>
-  <style>
-    body {
-      background-color: #020617;
-      color: #f8fafc;
-      font-family: 'Inter', sans-serif;
-    }
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0f172a;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
-    }
-    /* Responsive Iframe Scaling Wrapper */
-    .sheet-frame-wrap {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      background: #ffffff;
-    }
-    .sheet-frame-wrap iframe {
-      border: 0;
-      display: block;
-      transform-origin: 0 0;
-      transition: width 0.2s ease, height 0.2s ease, transform 0.2s ease;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
+<body>
 
   <!-- Sticky Top Navigation Bar -->
-  <header id="main-header" class="sticky top-0 z-30 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md">
-    <div class="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
+  <header id="main-header" class="top-header">
+    <div class="header-inner">
       <!-- Brand -->
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+      <div class="brand-group">
+        <div class="brand-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
           </svg>
         </div>
-        <div class="min-w-0">
-          <div class="flex items-center gap-2">
-            <h1 class="text-sm sm:text-lg font-extrabold tracking-tight text-white truncate">QuantPulse</h1>
-            <span id="status-badge" class="hidden md:inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-              <span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <div class="brand-text">
+          <div class="brand-title-row">
+            <h1 class="brand-title">QuantPulse</h1>
+            <span id="status-badge" class="status-badge font-mono">
+              <span id="status-dot" class="status-dot"></span>
               <span id="status-label">Market Terminal</span>
             </span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block truncate">Macro ETFs &amp; Equities Quantitative Dashboard</p>
+          <p class="brand-subtitle">Macro ETFs &amp; Equities Quantitative Dashboard</p>
         </div>
       </div>
 
       <!-- Right Action Controls -->
-      <div class="flex items-center gap-1.5 sm:gap-2.5">
+      <div class="header-actions">
         <!-- View Mode Switcher -->
-        <div class="hidden lg:flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-[11px] font-semibold">
-          <button type="button" data-view="split" onclick="TerminalUI.setViewMode('split')"
-                  class="view-btn px-2.5 py-1 rounded-lg bg-indigo-600 text-white transition cursor-pointer">
-            Split View
+        <div class="segmented-group desktop-only-seg">
+          <button type="button" data-view="split" onclick="TerminalUI.setViewMode('split')" class="view-btn seg-btn active">
+            Both Sheets
           </button>
-          <button type="button" data-view="etfs" onclick="TerminalUI.setViewMode('etfs')"
-                  class="view-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
+          <button type="button" data-view="etfs" onclick="TerminalUI.setViewMode('etfs')" class="view-btn seg-btn">
             ETFs Only
           </button>
-          <button type="button" data-view="stocks" onclick="TerminalUI.setViewMode('stocks')"
-                  class="view-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
+          <button type="button" data-view="stocks" onclick="TerminalUI.setViewMode('stocks')" class="view-btn seg-btn">
             Stocks Only
           </button>
         </div>
 
         <!-- Quick Finviz Chart Lookup -->
-        <form onsubmit="TerminalUI.openFinvizLookup(event)" class="hidden sm:flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 focus-within:border-indigo-500 transition">
-          <input id="finviz-ticker-input" type="text" maxlength="10" placeholder="Ticker (e.g. SPY)"
-                 class="w-28 lg:w-32 px-2.5 py-1 bg-transparent text-xs font-mono uppercase text-white placeholder-slate-500 focus:outline-none" />
-          <button type="submit"
-                  class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white text-[11px] font-semibold transition cursor-pointer">
-            Finviz ↗
-          </button>
+        <form onsubmit="TerminalUI.openFinvizLookup(event)" class="search-form-desktop">
+          <input id="finviz-ticker-input" type="text" maxlength="10" placeholder="Ticker (e.g. SPY)" class="search-input font-mono" />
+          <button type="submit" class="search-submit-btn">Finviz ↗</button>
         </form>
 
         <!-- Refresh Data & Charts Button -->
-        <button id="reload-btn" onclick="TerminalUI.refreshAll()"
-                title="Reload Both Google Sheets & Finviz Charts"
-                class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white text-xs font-semibold shadow-lg shadow-indigo-600/25 transition cursor-pointer">
-          <svg id="reload-icon" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+        <button id="reload-btn" onclick="TerminalUI.refreshAll()" title="Reload Both Google Sheets & Finviz Charts" class="btn-primary">
+          <svg id="reload-icon" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
           </svg>
           <span>Refresh</span>
@@ -122,127 +66,124 @@
   </header>
 
   <!-- Main Workspace -->
-  <main class="flex-1 flex flex-col max-w-[1600px] w-full mx-auto px-2.5 sm:px-6 lg:px-8 py-3 sm:py-5 gap-4 sm:gap-5">
+  <main class="main-workspace">
 
     <!-- Top Quick Finviz Launcher Bar -->
-    <section class="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3 sm:p-4 shadow-lg space-y-2.5">
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-2 text-xs text-slate-300">
-          <span class="font-semibold text-white">Quick Chart Launcher</span>
-          <span class="hidden sm:inline text-slate-500">• Click any ticker to open Finviz daily chart</span>
+    <section class="panel-card">
+      <div class="launcher-top">
+        <div class="launcher-title-wrap">
+          <span class="launcher-title">Quick Chart Launcher</span>
+          <span class="launcher-hint">• Click any ticker to open Finviz daily chart</span>
         </div>
 
         <!-- Mobile Finviz Search -->
-        <form onsubmit="TerminalUI.openFinvizLookup(event)" class="flex sm:hidden items-center flex-1 min-w-[170px] bg-slate-950 border border-slate-800 rounded-xl p-1">
-          <input id="finviz-ticker-mobile" type="text" maxlength="10" placeholder="Finviz Ticker..."
-                 class="w-full px-2.5 py-1 bg-transparent text-xs font-mono uppercase text-white placeholder-slate-500 focus:outline-none" />
-          <button type="submit"
-                  class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-semibold shrink-0 cursor-pointer">
-            Chart ↗
-          </button>
+        <form onsubmit="TerminalUI.openFinvizLookup(event)" class="search-form-mobile">
+          <input id="finviz-ticker-mobile" type="text" maxlength="10" placeholder="Finviz Ticker..." class="search-input font-mono" />
+          <button type="submit" class="search-submit-btn">Chart ↗</button>
         </form>
 
         <!-- Section Jump Links -->
-        <div class="hidden sm:flex items-center gap-3 text-[11px] text-slate-400">
-          <a href="#etfs-section" class="hover:text-indigo-300 font-medium transition">1. Macro ETFs ↓</a>
-          <span class="text-slate-700">|</span>
-          <a href="#stocks-section" class="hover:text-emerald-300 font-medium transition">2. Stocks &amp; Leaders ↓</a>
+        <div class="jump-links">
+          <a href="#etfs-section">1. Macro ETFs ↓</a>
+          <span>|</span>
+          <a href="#stocks-section">2. Stocks &amp; Leaders ↓</a>
         </div>
       </div>
 
       <!-- Horizontally Scrollable Macro & Sector ETF Chips -->
-      <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80 overflow-x-auto pb-1">
-        <span class="text-[11px] font-semibold text-slate-400 shrink-0">Finviz Charts:</span>
-        <div id="quick-tickers-bar" class="flex items-center gap-1.5 shrink-0"></div>
+      <div class="chips-row">
+        <span class="chips-label">Finviz Charts:</span>
+        <div id="quick-tickers-bar" class="chips-list"></div>
       </div>
     </section>
 
-    <!-- Side-Scrollable Finviz Daily Chart Gallery -->
-    <section id="chart-gallery-panel" class="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3 sm:p-4 shadow-lg">
-      <div class="flex items-center justify-between gap-2 mb-2.5">
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
-          <h2 class="text-xs sm:text-sm font-bold text-white tracking-tight">Daily Market &amp; Sector Pulse (Finviz)</h2>
-          <span class="hidden sm:inline text-[11px] font-mono text-slate-400">• SPY, QQQ, DIA, MDY, SMH &amp; S&amp;P 500 Sectors</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <button type="button" onclick="TerminalUI.scrollGallery(-1)" aria-label="Scroll charts left"
-                  class="p-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 transition cursor-pointer">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+    <!-- Collapsible Side-Scrollable Finviz Daily Chart Gallery -->
+    <section id="chart-gallery-panel" class="panel-card">
+      <div class="gallery-header" id="gallery-header-bar">
+        <button type="button" id="gallery-toggle-btn" onclick="TerminalUI.toggleGallery()" aria-expanded="true" class="gallery-toggle-trigger">
+          <span class="dot-indigo"></span>
+          <h2 class="gallery-title">Daily Market &amp; Sector Pulse (Finviz)</h2>
+          <span class="gallery-sub font-mono">• SPY, QQQ, DIA, MDY, SMH &amp; S&amp;P 500 Sectors</span>
+          <span id="gallery-collapse-badge" class="collapse-badge font-mono">
+            <svg id="gallery-chevron" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+            <span id="gallery-toggle-label">Hide</span>
+          </span>
+        </button>
+
+        <div id="gallery-nav-controls" class="gallery-nav">
+          <button type="button" onclick="TerminalUI.scrollGallery(-1)" aria-label="Scroll charts left" class="icon-btn">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
           </button>
-          <button type="button" onclick="TerminalUI.scrollGallery(1)" aria-label="Scroll charts right"
-                  class="p-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 transition cursor-pointer">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+          <button type="button" onclick="TerminalUI.scrollGallery(1)" aria-label="Scroll charts right" class="icon-btn">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
           </button>
         </div>
       </div>
-      <div id="finviz-chart-gallery" class="flex items-stretch gap-3 overflow-x-auto pb-2 scroll-smooth snap-x"></div>
+
+      <div id="gallery-collapsible-body" class="gallery-body">
+        <div id="finviz-chart-gallery" class="gallery-track"></div>
+      </div>
     </section>
 
-    <!-- Sheet Viewport Controls (Mobile Tab Switcher + Zoom Density) -->
-    <section class="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3 sm:p-4 shadow-lg flex flex-wrap items-center justify-between gap-3">
+    <!-- Sheet Viewport Controls (Tab Switcher + Zoom Density) -->
+    <section class="panel-card controls-bar">
       <!-- Tab / Layout Mode Selector -->
-      <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
-        <button type="button" data-view="split" onclick="TerminalUI.setViewMode('split')"
-                class="view-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition cursor-pointer">
+      <div class="segmented-group">
+        <button type="button" data-view="split" onclick="TerminalUI.setViewMode('split')" class="view-btn seg-btn active">
           Both Sheets
         </button>
-        <button type="button" data-view="etfs" onclick="TerminalUI.setViewMode('etfs')"
-                class="view-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition cursor-pointer">
+        <button type="button" data-view="etfs" onclick="TerminalUI.setViewMode('etfs')" class="view-btn seg-btn">
           1. ETFs
         </button>
-        <button type="button" data-view="stocks" onclick="TerminalUI.setViewMode('stocks')"
-                class="view-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition cursor-pointer">
+        <button type="button" data-view="stocks" onclick="TerminalUI.setViewMode('stocks')" class="view-btn seg-btn">
           2. Stocks
         </button>
       </div>
 
       <!-- Zoom & Sync Controls -->
-      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-        <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-[11px]">
-          <span class="px-2 text-slate-500 font-medium hidden sm:inline">Scale:</span>
-          <button type="button" data-scale="0.72" onclick="TerminalUI.setScale(0.72)"
-                  class="scale-btn px-2.5 py-1 rounded-lg font-mono text-slate-400 hover:text-white transition cursor-pointer">
+      <div class="scale-group">
+        <div class="segmented-group">
+          <span class="scale-label">Scale:</span>
+          <button type="button" data-scale="0.72" onclick="TerminalUI.setScale(0.72)" class="scale-btn font-mono">
             72%
           </button>
-          <button type="button" data-scale="0.85" onclick="TerminalUI.setScale(0.85)"
-                  class="scale-btn px-2.5 py-1 rounded-lg font-mono text-slate-400 hover:text-white transition cursor-pointer">
+          <button type="button" data-scale="0.85" onclick="TerminalUI.setScale(0.85)" class="scale-btn font-mono">
             85%
           </button>
-          <button type="button" data-scale="1" onclick="TerminalUI.setScale(1)"
-                  class="scale-btn px-2.5 py-1 rounded-lg font-mono bg-indigo-600 text-white font-semibold transition cursor-pointer">
+          <button type="button" data-scale="1" onclick="TerminalUI.setScale(1)" class="scale-btn font-mono active">
             100%
           </button>
         </div>
 
-        <span id="last-updated-text" class="text-[11px] font-mono text-slate-400">2 Live Feeds</span>
+        <span id="last-updated-text" class="sync-timestamp font-mono">2 Live Feeds</span>
       </div>
     </section>
 
     <!-- DUAL IFRAME DATA WORKSPACE -->
-    <div id="iframes-grid" class="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-5">
+    <div id="iframes-grid" class="iframes-grid split-active">
 
       <!-- SECTION 1: ETFs IFRAME -->
-      <section id="etfs-section" class="bg-slate-900 border border-slate-800/90 rounded-2xl overflow-hidden shadow-xl flex flex-col">
-        <div class="px-4 py-3 bg-slate-950/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
-          <div class="flex items-center gap-2.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]"></span>
-            <h2 class="text-sm sm:text-base font-bold text-white tracking-tight">1. Macro &amp; Sector ETFs</h2>
-            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">Live Sheet</span>
+      <section id="etfs-section" class="sheet-card">
+        <div class="sheet-card-header">
+          <div class="sheet-title-wrap">
+            <span class="pulse-dot-indigo"></span>
+            <h2 class="sheet-title">1. Macro &amp; Sector ETFs</h2>
+            <span class="pill-indigo font-mono">Live Sheet</span>
           </div>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="TerminalUI.reloadSingleFrame('etfs')"
-                    class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold transition cursor-pointer">
+          <div>
+            <button type="button" onclick="TerminalUI.reloadSingleFrame('etfs')" class="btn-secondary">
               Reload ETFs
             </button>
           </div>
         </div>
 
-        <div id="etfs-frame-wrap" class="sheet-frame-wrap h-[540px] sm:h-[640px]">
+        <div id="etfs-frame-wrap" class="sheet-frame-wrap">
           <iframe id="etfs-iframe"
                   title="Macro & Sector ETFs Google Sheet"
                   src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQUMru7EYeezAxCzyDbqbj5kwpcCI9nIVVqQb_UJY1nzkas55_rNOnps14ymD27awudy6qCFWEusI8h/pubhtml?widget=true&amp;headers=false"
@@ -251,22 +192,21 @@
       </section>
 
       <!-- SECTION 2: STOCKS IFRAME -->
-      <section id="stocks-section" class="bg-slate-900 border border-slate-800/90 rounded-2xl overflow-hidden shadow-xl flex flex-col">
-        <div class="px-4 py-3 bg-slate-950/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
-          <div class="flex items-center gap-2.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
-            <h2 class="text-sm sm:text-base font-bold text-white tracking-tight">2. Stocks &amp; Market Leaders</h2>
-            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Live Sheet</span>
+      <section id="stocks-section" class="sheet-card">
+        <div class="sheet-card-header">
+          <div class="sheet-title-wrap">
+            <span class="pulse-dot-emerald"></span>
+            <h2 class="sheet-title">2. Stocks &amp; Market Leaders</h2>
+            <span class="pill-emerald font-mono">Live Sheet</span>
           </div>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="TerminalUI.reloadSingleFrame('stocks')"
-                    class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold transition cursor-pointer">
+          <div>
+            <button type="button" onclick="TerminalUI.reloadSingleFrame('stocks')" class="btn-secondary">
               Reload Stocks
             </button>
           </div>
         </div>
 
-        <div id="stocks-frame-wrap" class="sheet-frame-wrap h-[540px] sm:h-[640px]">
+        <div id="stocks-frame-wrap" class="sheet-frame-wrap">
           <iframe id="stocks-iframe"
                   title="Stocks & Market Leaders Google Sheet"
                   src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTEu63iygiqETe_-jsNgE2KbG6krw6JT7gjP615q0u5wZDceE6A8YOkANajGjuHwYpPIuadMIAdOHNQ/pubhtml?widget=true&amp;headers=false"
@@ -278,203 +218,6 @@
 
   </main>
 
-  <script>
-    // Embedded Google Sheets Iframe Sources
-    const IFRAME_SOURCES = {
-      etfs: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQUMru7EYeezAxCzyDbqbj5kwpcCI9nIVVqQb_UJY1nzkas55_rNOnps14ymD27awudy6qCFWEusI8h/pubhtml?widget=true&headers=false',
-      stocks: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTEu63iygiqETe_-jsNgE2KbG6krw6JT7gjP615q0u5wZDceE6A8YOkANajGjuHwYpPIuadMIAdOHNQ/pubhtml?widget=true&headers=false'
-    };
-
-    // S&P 500 GICS Sub-Sector ETFs
-    const SP500_SECTORS = [
-      { ticker: 'XLK', name: 'Technology' },
-      { ticker: 'XLF', name: 'Financials' },
-      { ticker: 'XLV', name: 'Health Care' },
-      { ticker: 'XLY', name: 'Cons. Disc.' },
-      { ticker: 'XLC', name: 'Comm. Svcs' },
-      { ticker: 'XLI', name: 'Industrials' },
-      { ticker: 'XLP', name: 'Cons. Staples' },
-      { ticker: 'XLE', name: 'Energy' },
-      { ticker: 'XLU', name: 'Utilities' },
-      { ticker: 'XLRE', name: 'Real Estate' },
-      { ticker: 'XLB', name: 'Materials' }
-    ];
-
-    // Quick Finviz Chart Launcher Tickers (Macro + SMH + S&P 500 Sub-Sectors)
-    const QUICK_LAUNCHER_TICKERS = [
-      'SPY', 'QQQ', 'RSP', 'DIA', 'IWM', 'IBIT', 'IVE', 'IVW', 'GLD', 'SMH',
-      ...SP500_SECTORS.map(s => s.ticker)
-    ];
-
-    // Daily Image Chart Gallery Tickers (SPY, QQQ, DIA, MDY, SMH + S&P 500 Sub-Sectors)
-    const CHART_GALLERY_ITEMS = [
-      { ticker: 'SPY', name: 'S&P 500 ETF' },
-      { ticker: 'QQQ', name: 'Nasdaq 100' },
-      { ticker: 'DIA', name: 'Dow Jones Ind.' },
-      { ticker: 'MDY', name: 'S&P MidCap 400' },
-      { ticker: 'SMH', name: 'Semiconductors' },
-      ...SP500_SECTORS
-    ];
-
-    const TerminalUI = {
-      scale: window.innerWidth < 640 ? 0.72 : 1,
-      viewMode: 'split',
-
-      init() {
-        this.renderQuickLauncher();
-        this.renderChartGallery();
-        this.setScale(this.scale);
-        this.setViewMode(window.innerWidth < 640 ? 'etfs' : 'split');
-        this.updateTimestamp();
-      },
-
-      getFinvizChartPageUrl(ticker) {
-        return `https://finviz.com/stock?t=${encodeURIComponent(ticker)}&p=d`;
-      },
-
-      getFinvizImageUrl(ticker, bust = false) {
-        const suffix = bust ? `&_t=${Date.now()}` : '';
-        return `https://finviz.com/chart.ashx?t=${encodeURIComponent(ticker)}&ty=c&ta=1&p=d&s=l${suffix}`;
-      },
-
-      renderQuickLauncher() {
-        const container = document.getElementById('quick-tickers-bar');
-        if (!container) return;
-        const sectorMap = Object.fromEntries(SP500_SECTORS.map(s => [s.ticker, s.name]));
-        container.innerHTML = QUICK_LAUNCHER_TICKERS.map(ticker => {
-          const label = sectorMap[ticker] ? ` · ${sectorMap[ticker]}` : (ticker === 'SMH' ? ' · Semis' : '');
-          return `
-            <a href="${this.getFinvizChartPageUrl(ticker)}" target="_blank" rel="noopener noreferrer"
-               class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-indigo-600/20 border border-slate-800 hover:border-indigo-500/50 text-xs font-mono font-semibold text-slate-200 hover:text-indigo-200 transition shrink-0">
-              <span>${ticker}</span>
-              ${label ? `<span class="font-sans font-normal text-[10px] text-slate-400">${label}</span>` : ''}
-            </a>
-          `;
-        }).join('');
-      },
-
-      renderChartGallery(bust = false) {
-        const gallery = document.getElementById('finviz-chart-gallery');
-        if (!gallery) return;
-        gallery.innerHTML = CHART_GALLERY_ITEMS.map(item => `
-          <a href="${this.getFinvizChartPageUrl(item.ticker)}" target="_blank" rel="noopener noreferrer"
-             class="snap-start shrink-0 w-[260px] sm:w-[300px] bg-slate-950 border border-slate-800 hover:border-indigo-500/60 rounded-xl overflow-hidden flex flex-col transition group">
-            <div class="px-3 py-2 border-b border-slate-800/80 flex items-center justify-between">
-              <div class="flex items-center gap-1.5">
-                <span class="font-mono text-xs font-bold text-white group-hover:text-indigo-300">${item.ticker}</span>
-                <span class="text-[11px] text-slate-400 truncate max-w-[140px]">${item.name}</span>
-              </div>
-              <span class="text-[10px] font-mono text-slate-500 group-hover:text-indigo-400">Finviz ↗</span>
-            </div>
-            <div class="relative bg-slate-900 aspect-[16/9] flex items-center justify-center overflow-hidden">
-              <img src="${this.getFinvizImageUrl(item.ticker, bust)}"
-                   alt="${item.ticker} Daily Chart"
-                   loading="lazy"
-                   onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
-                   class="w-full h-full object-cover" />
-              <div class="hidden p-3 text-center text-[11px] text-slate-400">
-                Chart preview unavailable — click to open <strong class="text-indigo-300">${item.ticker}</strong> on Finviz ↗
-              </div>
-            </div>
-          </a>
-        `).join('');
-      },
-
-      scrollGallery(direction) {
-        const gallery = document.getElementById('finviz-chart-gallery');
-        if (!gallery) return;
-        gallery.scrollBy({ left: direction * 320, behavior: 'smooth' });
-      },
-
-      openFinvizLookup(event) {
-        event.preventDefault();
-        const desktopInput = document.getElementById('finviz-ticker-input');
-        const mobileInput = document.getElementById('finviz-ticker-mobile');
-        const raw = (desktopInput?.value || mobileInput?.value || '').trim().toUpperCase();
-        if (!raw) return;
-        window.open(this.getFinvizChartPageUrl(raw), '_blank', 'noopener,noreferrer');
-        if (desktopInput) desktopInput.value = '';
-        if (mobileInput) mobileInput.value = '';
-      },
-
-      setViewMode(mode) {
-        this.viewMode = mode;
-        const grid = document.getElementById('iframes-grid');
-        const etfsSec = document.getElementById('etfs-section');
-        const stocksSec = document.getElementById('stocks-section');
-
-        if (grid && etfsSec && stocksSec) {
-          if (mode === 'split') {
-            grid.className = 'grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-5';
-            etfsSec.classList.remove('hidden');
-            stocksSec.classList.remove('hidden');
-          } else if (mode === 'etfs') {
-            grid.className = 'grid grid-cols-1 gap-4 sm:gap-5';
-            etfsSec.classList.remove('hidden');
-            stocksSec.classList.add('hidden');
-          } else {
-            grid.className = 'grid grid-cols-1 gap-4 sm:gap-5';
-            etfsSec.classList.add('hidden');
-            stocksSec.classList.remove('hidden');
-          }
-        }
-
-        document.querySelectorAll('.view-btn').forEach(btn => {
-          const active = btn.dataset.view === mode;
-          btn.className = active
-            ? 'view-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition cursor-pointer'
-            : 'view-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition cursor-pointer';
-        });
-      },
-
-      setScale(scale) {
-        this.scale = scale;
-        const pct = `${(100 / scale).toFixed(2)}%`;
-
-        ['etfs-iframe', 'stocks-iframe'].forEach(id => {
-          const frame = document.getElementById(id);
-          if (!frame) return;
-          frame.style.width = pct;
-          frame.style.height = pct;
-          frame.style.transform = `scale(${scale})`;
-        });
-
-        document.querySelectorAll('.scale-btn').forEach(btn => {
-          const active = parseFloat(btn.dataset.scale) === scale;
-          btn.className = active
-            ? 'scale-btn px-2.5 py-1 rounded-lg font-mono bg-indigo-600 text-white font-semibold transition cursor-pointer'
-            : 'scale-btn px-2.5 py-1 rounded-lg font-mono text-slate-400 hover:text-white transition cursor-pointer';
-        });
-      },
-
-      reloadSingleFrame(key) {
-        const frame = document.getElementById(`${key}-iframe`);
-        if (!frame || !IFRAME_SOURCES[key]) return;
-        const sep = IFRAME_SOURCES[key].includes('?') ? '&' : '?';
-        frame.src = `${IFRAME_SOURCES[key]}${sep}_cb=${Date.now()}`;
-        this.updateTimestamp();
-      },
-
-      refreshAll() {
-        const icon = document.getElementById('reload-icon');
-        if (icon) {
-          icon.classList.add('animate-spin');
-          setTimeout(() => icon.classList.remove('animate-spin'), 700);
-        }
-        this.reloadSingleFrame('etfs');
-        this.reloadSingleFrame('stocks');
-        this.renderChartGallery(true);
-      },
-
-      updateTimestamp() {
-        const el = document.getElementById('last-updated-text');
-        if (!el) return;
-        const now = new Date();
-        el.textContent = `Synced ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
-      }
-    };
-
-    window.addEventListener('DOMContentLoaded', () => TerminalUI.init());
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
